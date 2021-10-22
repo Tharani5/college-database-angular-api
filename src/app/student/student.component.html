@@ -1,0 +1,313 @@
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="main-box clearfix">
+                <button class="btn btn-info" 
+                    (click)="clickEvent('allStudents')">Students List
+                </button>&nbsp; 
+                <button class="btn btn-info" 
+                    (click)="clickEvent('studentsByYear')">Search By year
+                </button>&nbsp; 
+                <button class="btn btn-info" 
+                    (click)="clickEvent('studentsByDepartment')">Search By Department
+                </button>&nbsp; 
+                <button class="btn btn-info" 
+                    (click)="clickEvent('feeTotalByDepartment')">TotalFee
+                </button>&nbsp; 
+                <button class="btn btn-info" data-toggle="modal" data-target="#addStudentModal">
+                    Add Student
+                </button>&nbsp;
+                <button class="btn btn-info" 
+                    (click)="clickEvent('uploadFile')">Upload File
+                </button>&nbsp; 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div [ngSwitch]="select" >
+    <div *ngSwitchCase="'allStudents'" class="table-responsive">
+        <table class="table user-list">
+            <thead>
+                <tr>
+                    <th><span>ID</span></th>
+                    <th><span>Name</span></th>
+                    <th class="text-center"><span>Course</span></th>
+                    <th><span>Fee</span></th>
+                    <th><span>Year</span></th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let students of student">
+                    <td>
+                        {{students.id}}
+                    </td>
+                    <td>
+                        {{students.name}}
+                    </td>
+                    <td class="text-center">
+                        {{students.course}}
+                    </td>
+                    <td>
+                        {{students.fee}}
+                    </td>
+                    <td>
+                        {{students.year}}
+                    </td>
+                    <td style="width: 20%;">
+                        <a href="javascript: void(0);" class="table-link" (click)="loadStudentData(students,1)" data-toggle="modal" data-target="#editStudentModal">
+                            <span class="fa-stack">
+                                <i class="fa fa-square fa-stack-2x"></i>
+                                <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                        <a href="javascript: void(0);" class="table-link danger" (click)="setDeleteId(students.id,1)" data-toggle="modal" data-target="#deleteStudentModal" >
+                            <span class="fa-stack">
+                                <i class="fa fa-square fa-stack-2x"></i>
+                                <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                            </span>                           
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngSwitchCase="'studentsByYear'" class="container">
+        <br>Enter the year to fetch all students<br>
+        <input type="number" required min="1" max="4" #temp > &nbsp;
+        <button class="btn-info" (click)="getStudentByYear(temp.value)">Click ME</button>
+        <table *ngIf="studentsyearlenght" class="table user-list">
+            <thead>
+                <tr>
+                    <th><span>ID</span></th>
+                    <th><span>Name</span></th>
+                    <th class="text-center"><span>Course</span></th>
+                    <th><span>Fee</span></th>
+                    <th><span>Year</span></th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let students of studentsyear">
+                    <td>
+                        {{students.id}}
+                    </td>
+                    <td>
+                        {{students.name}}
+                    </td>
+                    <td class="text-center">
+                        {{students.course}}
+                    </td>
+                    <td>
+                        {{students.fee}}
+                    </td>
+                    <td>
+                        {{students.year}}
+                    </td>
+                    <td style="width: 20%;">
+                        <a href="javascript: void(0);" class="table-link" (click)="loadStudentData(students,2)" data-toggle="modal" data-target="#editStudentModal">
+                            <span class="fa-stack">
+                                <i class="fa fa-square fa-stack-2x"></i>
+                                <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                        <a href="javascript: void(0);" class="table-link danger" (click)="setDeleteId(students.id,2)" data-toggle="modal" data-target="#deleteStudentModal" >
+                            <span class="fa-stack">
+                                <i class="fa fa-square fa-stack-2x"></i>
+                                <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                            </span>                           
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>        
+        <div *ngIf="!studentsyearlenght && set ===0 " class="container-fluid">
+            No records found
+        </div>
+    </div>
+    <div *ngSwitchCase="'studentsByDepartment'" class="container">
+        <br>Enter Department ID to fetch all students
+        <br><input type="number" required min="1" max="7" #temp> &nbsp;
+        <button class="btn-info" (click)="getStudentsByDepartment(temp.value)">Get List</button>
+        <table *ngIf="studentsyearlenght" class="table user-list">
+            <thead>
+                <tr>
+                    <th><span>ID</span></th>
+                    <th><span>Name</span></th>
+                    <th class="text-center"><span>Course</span></th>
+                    <th><span>Fee</span></th>
+                    <th><span>Year</span></th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let students of studentsDepartment">
+                    <td>
+                        {{students.id}}
+                    </td>
+                    <td>
+                        {{students.name}}
+                    </td>
+                    <td class="text-center">
+                        {{students.course}}
+                    </td>
+                    <td>
+                        {{students.fee}}
+                    </td>
+                    <td>
+                        {{students.year}}
+                    </td>
+                    <td style="width: 20%;">
+                        <a href="javascript: void(0);" class="table-link" (click)="loadStudentData(students,3)" data-toggle="modal" data-target="#editStudentModal">
+                            <span class="fa-stack">
+                                <i class="fa fa-square fa-stack-2x"></i>
+                                <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                        <a href="javascript: void(0);" class="table-link danger" (click)="setDeleteId(students.id,3)" data-toggle="modal" data-target="#deleteStudentModal" >
+                            <span class="fa-stack">
+                                <i class="fa fa-square fa-stack-2x"></i>
+                                <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                            </span>                           
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>        
+        <div *ngIf="!studentsyearlenght && set ===0 " class="container-fluid">
+            No records found
+        </div>
+    </div>
+    <div *ngSwitchCase="'feeTotalByDepartment'" class="container">
+        <br>Enter Department ID to give TotalFee of students<br>
+        <input type="number" required min="1" max="4" #temp> &nbsp;
+        <button class="btn-info" (click)="getFeeTotalByDepartment(temp.value)">Get List</button>
+          {{feeTotal}}      
+    </div>
+    <div *ngSwitchCase="'uploadFile'" class="container">
+        <br>Upload excel file 
+        <input type="file" #temp (change)="onChange(temp.files)"><br> 
+        <button class="btn-info" (click)="uploadFile(temp.files)" >Upload File</button>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-sm" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+          <div class="modal-content">
+             <div class="modal-header">
+                <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+             </div>
+             <div class="modal-body">
+                <form [formGroup]="studentForm" (ngSubmit)="addStudent()">                
+                    <div >
+                    <label> Name:</label> <br>
+                      <input type="text" required placeholder="Name" formControlName="name">                    
+                </div>
+                <div >
+                  <label> Course</label> <br>
+                      <select required placeholder="Course" formControlName="course">
+                          <option></option>
+                        <option *ngFor="let title of departments">
+                          {{title.name}}                          
+                        </option>
+                    </select>                     
+                </div>
+                <div >
+                  <label>Fee</label><br>
+                      <input type="number" required placeholder="Fee" formControlName="fee">                  
+                </div>
+                <div >
+                  <label> Year</label><br>
+                      <input type="number" required placeholder="Year" formControlName="year">                  
+                </div>
+                  <div formGroupName="department">                
+                      <label> Department ID</label><br>
+                        <select required placeholder="Department Id" formControlName="id">
+                            <option *ngFor="let title of departments" value={{title.id}}>
+                              {{title.name}}&nbsp;
+                              {{title.id}}                          
+                            </option>
+                        </select>                                            
+                    </div>
+                <div class="modal-footer">
+                   <button type="button" id="add-student-form" class="btn btn-danger" data-dismiss="modal">Close</button>
+                   <button [disabled]="studentForm.invalid" type="submit" class="btn btn-primary">Add</button>
+                </div>
+                </form>
+             </div>
+          </div>
+        </div>
+</div>
+
+<div class="modal fade bd-example-modal-sm" id="editStudentModal" tabindex="-1" role="dialog" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="editStudentModalLabel">Add Student</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <form [formGroup]="editStudentForm" (ngSubmit)="updateStudent()">           
+                <div >
+                <label> Name:</label> <br>
+                  <input type="text" required formControlName="name">                    
+                </div>
+                <div >
+                <label> Course</label> <br>
+                <select required  formControlName="course">
+                    <option *ngFor="let title of departments">
+                      {{title.name}}                          
+                    </option>
+                </select>                        
+                </div>
+                <div >
+                <label>Fee</label><br>
+                    <input type="number" required formControlName="fee">                  
+                </div>
+                <div >
+                <label> Year</label><br>
+                    <input type="number" required formControlName="year">                  
+                </div>
+                <div formGroupName="department">                
+                    <label> Department ID</label><br>
+                    <select required placeholder="Department Id" formControlName="id">
+                        <option *ngFor="let title of departments" value={{title.id}}>
+                          {{title.name}}&nbsp;
+                          {{title.id}}                          
+                        </option>
+                    </select>                                       
+                </div>
+            <div class="modal-footer">
+               <button type="button" id="edit-student-form" class="btn btn-danger" data-dismiss="modal">Close</button>
+               <button [disabled]="editStudentForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+            </div>
+            </form>
+         </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-sm" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="deleteStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="deleteStudentModalLabel">Are you sure delete Student Id: {{deleteStudents}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">      
+               <button type="button" id="delete-student-form" class="btn btn-danger" data-dismiss="modal">No</button>&nbsp;
+               <button type="submit" (click)="deleteStudent()" class="btn btn-primary" data-dismiss="modal">Yes</button>        
+         </div>
+      </div>
+    </div>
+</div>
+    

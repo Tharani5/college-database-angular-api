@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'college';
+  public selectOption:any;
+
+  onClick(temp:any){
+    this.selectOption=temp;
+  }
 }
